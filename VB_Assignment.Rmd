@@ -1,0 +1,74 @@
+---
+title: "VB R_Assignment"
+author: "Vishesh Bhatia"
+date: "3/18/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+## Reading the Genotypes and SNPs file
+Through the code below, we are able to load the files fang_et_al_genotypes.txt 
+and snp_position file into our global environment tab. 
+```{r}
+genotypes <- read.table("https://raw.githubusercontent.com/EEOB-BioData/BCB546-Spring2021/main/assignments/UNIX_Assignment/fang_et_al_genotypes.txt", header = TRUE, sep = "\t")
+SNPs <- read.table("https://raw.githubusercontent.com/EEOB-BioData/BCB546-Spring2021/main/assignments/UNIX_Assignment/snp_position.txt", header = TRUE, sep = "\t")
+```
+
+# Part 1
+## DATA INSPECTION
+
+We were able to analyze both the genotypes and SNP files and the code for that is below. 
+
+```{r}
+dim(genotypes)
+#Provided us with the dimensions of the file: 2782 rows and 986 columns
+dim(SNPs)
+#Provided us with the dimensions of the file: 983 rows and 15 columns
+
+genotypes[1:10, 1:10]
+SNPs[1:10, 1:10]
+#Prints the first 10 rows and columns and helps us get an idea of what the file looks like. 
+
+class(genotypes)
+class(SNPs)
+#Provides us the information about the vectors and looks like both files are data.frame format. 
+
+str(genotypes)
+str(SNPs)
+#Provides information about structure of the data frame such as name, type and preview of data in each column. 
+
+```
+
+## Data Processing
+
+Sort out the genotypes based on the Group and create separate data files of each species. 
+
+```{r}
+maize_g <- filter(genotypes, Group == 'ZMMIL' | Group == 'ZMMLR' | Group == 'ZMMMR')
+teosinte_g <- filter(genotypes, Group == 'ZMPBA' | Group == 'ZMPIL' | Group == 'ZMPJA')
+```
+
+Transposing the Data
+
+```{r}
+transposed_maize <- t(maize_g)
+colnames(transposed_maize) <- maize_g[,1] 
+transposed_maize <- transposed_maize[4:nrow(transposed_maize),]
+
+```
+
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
