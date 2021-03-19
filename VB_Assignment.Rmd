@@ -58,17 +58,12 @@ teosinte_g <- filter(genotypes, Group == 'ZMPBA' | Group == 'ZMPIL' | Group == '
 Transposing the Data
 
 ```{r}
-transposed_maize <- t(maize_g)
-colnames(transposed_maize) <- maize_g[,1] 
-transposed_maize <- transposed_maize[4:nrow(transposed_maize),]
-
+maize_g <- column_to_rownames(maize_g, var = "Sample_ID")
+transposed_maize <- t(maize_g) %>% as.data.frame() %>% rownames_to_column(., var = "SNP_ID") 
+transposed_maize <- transposed_maize[3:nrow(transposed_maize),]
+Mdata <- merge(SNPs, transposed_maize, by = "SNP_ID")
 ```
 
+aknjsnakj
+asdjfajfnalj
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
