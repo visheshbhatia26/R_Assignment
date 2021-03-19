@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 library(tidyverse)
+setwd('.')
 ```
 
 ## Reading the Genotypes and SNPs file
@@ -45,25 +46,79 @@ str(SNPs)
 #Provides information about structure of the data frame such as name, type and preview of data in each column. 
 
 ```
-
+## PART 2
 ## Data Processing
 
 Sort out the genotypes based on the Group and create separate data files of each species. 
 
 ```{r}
+#Filter out the maize data
 maize_g <- filter(genotypes, Group == 'ZMMIL' | Group == 'ZMMLR' | Group == 'ZMMMR')
+
+#Filter out the Teosinte Data
 teosinte_g <- filter(genotypes, Group == 'ZMPBA' | Group == 'ZMPIL' | Group == 'ZMPJA')
 ```
 
-Transposing the Data
+### Transposing the Maize Data
 
 ```{r}
 maize_g <- column_to_rownames(maize_g, var = "Sample_ID")
 transposed_maize <- t(maize_g) %>% as.data.frame() %>% rownames_to_column(., var = "SNP_ID") 
 transposed_maize <- transposed_maize[3:nrow(transposed_maize),]
 Mdata <- merge(SNPs, transposed_maize, by = "SNP_ID")
+Mdata <- select(Mdata, SNP_ID, Chromosome, Position, everything())
 ```
 
-aknjsnakj
-asdjfajfnalj
+### Tranposing the Teosinte Data
+
+```{r}
+teosinte_g <- column_to_rownames(teosinte_g, var = "Sample_ID")
+transposed_teosinte <- t(teosinte_g) %>% as.data.frame() %>% rownames_to_column(., var = "SNP_ID") 
+transposed_teosinte <- transposed_teosinte[3:nrow(transposed_teosinte),]
+TData <- merge(SNPs, transposed_teosinte, by = "SNP_ID")
+TData <- select(TData, SNP_ID, Chromosome, Position, everything())
+```
+
+## Maize Output
+
+```{r}
+chr_maize <- filter(Mdata, Chromosome != "multiple" & Chromosome != "unknown")
+for (i in 1:length(unique(chr_maize$Chromosome))){
+  chrm <-  chr_maize %>% filter(Chromosome == i) %>% arrange(Position)
+  write.table(chrm, file = paste("./Maize/Maize_Part_A",i, sep="_"))
+}
+
+```
+
+```{r}
+Subbed_Maize <- as_tibble(lapply(Mdata, gsub, pattern ="?", replacement ="-", fixed = TRUE))
+Subbed_Chr_Maize <- filter(Subbed_Maize, Chromosome != "multiple" & Chromosome != "unknown")
+for (i in 1:length(unique(Subbed_Chr_Maize$Chromosome))) {
+  chrm_subbed <- Subbed_Chr_Maize %>% filter(Chromosome == i) %>% arrange(desc(Position))
+  write.table(chrm_subbed, file = paste("./Maize/Maize_Part_B", i, sep = "_"))
+  }
+
+```
+
+## Teosinte Data
+```{r}
+chr_teosinte <- filter(TData, Chromosome != "multiple" & Chromosome != "unknown")
+for (i in 1:length(unique(chr_teosinte$Chromosome))) {
+  chrt <- chr_teosinte %>% filter(Chromosome == i) %>% arrange(Position)
+  write.table (chrt, file = paste("./Teosinte/Teosinte_Part_A", i, sep = "_"))
+}
+```
+
+```{r}
+Subbed_Teosinte <- as_tibble(lapply(TData, gsub, pattern = "?", replacement = "-", fixed = TRUE))
+Subbed_Chr_Teosinte <- filter(Subbed_Teosinte, Chromosome != "multiple" & Chromosome != "unknown")
+for (i in 1:length(unique(Subbed_Chr_Teosinte$Chromosome))) {
+    chrt_subbed <- Subbed_Chr_Teosinte %>% filter(Chromosome == i) %>% arrange(desc(Position))
+    write.table(chrt_subbed, file = paste("./Teosinte/Teosinte_Part_B", i, sep = "_"))
+}
+```
+
+# PART 3
+# DATA VISUALIZATION
+
 
