@@ -1,0 +1,24 @@
+---
+title: "Bhatia_Review_Topping"
+author: "Nick Topping"
+date: "3/22/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Assignment review for Vishesh Bhatia
+
+I like that you were able to get the function `lapply()` to work as it took me a while to figure that out. It makes large tasks like that a lot nicer to deal with though!
+
+I would include a nice description of what the code is doing before each chunk. That way a reader has a clear idea of what's going on at every step of the way. Your descriptions are currently embedded within the output od code
+
+I would modify your Markdown file to include the outputs of the plots once you knit it. It's hard to understand your data and know if you did it right without the plots. The functions you are using seem like they should get you the right output
+
+You can also remove warnings when the output goes into the markdown file by putting {r warning=FALSE} in the chunk executing that code. This can tidy up the markdown file.
+
+You may want to consider hiding the outputs of some functions, like the str(genotypes) that you used as it has a long output. You can also have it include the first so many lines of an output before it cuts it off.
+
+Your code looks really good overall. I feel the things I have mentioned would mainly help the reader view the markdown file better once it's knit. Your code and results get teh job done, and it isn't slow.
